@@ -226,11 +226,11 @@ export default function Home() {
           </p>
           
           <div className="flex flex-wrap justify-center gap-6">
-            <ContactIcon link="mailto:emailmu@gmail.com" icon={<FaEnvelope size={28} />} hoverColor="hover:text-red-500" />
-            <ContactIcon link="#" icon={<FaLinkedin size={28} />} hoverColor="hover:text-blue-600" />
-            <ContactIcon link="#" icon={<FaGithub size={28} />} hoverColor="hover:text-slate-900" />
-            <ContactIcon link="#" icon={<FaInstagram size={28} />} hoverColor="hover:text-pink-600" />
-            <ContactIcon link="#" icon={<FaDiscord size={28} />} hoverColor="hover:text-indigo-500" />
+            <ContactIcon link="mailto:nadhifhafizp@gmail.com" icon={<FaEnvelope size={28} />} hoverColor="hover:text-red-500" />
+            <ContactIcon link="https://www.linkedin.com/in/nadhif-hafiz-pradiptya/" icon={<FaLinkedin size={28} />} hoverColor="hover:text-blue-600" />
+            <ContactIcon link="https://github.com/nadhifhafizp" icon={<FaGithub size={28} />} hoverColor="hover:text-slate-900" />
+            <ContactIcon link="https://www.instagram.com/nadhifhafizz/" icon={<FaInstagram size={28} />} hoverColor="hover:text-pink-600" />
+            <ContactIcon link="https://discord.com/users/530184723578748965" icon={<FaDiscord size={28} />} hoverColor="hover:text-indigo-500" />
           </div>
         </motion.div>
       </section>

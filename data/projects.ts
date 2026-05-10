@@ -19,20 +19,38 @@ export const projects = [
   },
   {
     id: 3,
-    title: 'Voice-Interactive Robot',
-    description: 'Robot asisten pribadi dengan kemampuan komunikasi suara dan layar OLED untuk menampilkan ekspresi mata yang dinamis berdasarkan interaksi.',
-    techStack: ['ESP32', 'MQTT', 'C++'],
-    category: 'IoT & Robotics',
-    link: '#',
-    image: '/iot-robot.jpg' // <-- Tambahkan baris ini
+    title: 'Gridify - Bracket Esports Generator',
+    description: 'Platform  Pembuatan bracket turnamen esports yang interaktif dan mudah digunakan, memungkinkan pengguna untuk membuat dan mengelola turnamen dengan berbagai format seperti single elimination, double elimination, dan round-robin.',
+    techStack: ['Next.js', 'Tailwind CSS'],
+    category: 'Web Development',
+    link: 'https://gridify-one.vercel.app/',
+    image: '/gridify.jpeg' // <-- Tambahkan baris ini
   },
   {
     id: 4,
-    title: 'Cinematic Visual Editing',
-    description: 'Kompilasi proyek editing video dan desain visual, termasuk integrasi efek chroma key dan pembuatan animasi bergaya cinematic.',
+    title: 'Podcast Santai - Story Highlight Clip',
+    description: 'Video podcast pendek dengan editing dinamis dan subtitle interaktif untuk meningkatkan engagement penonton di TikTok. Fokus pada pemotongan momen penting agar pesan tersampaikan secara singkat dan menarik.',
     techStack: ['CapCut', 'Video Editing'],
     category: 'Creative',
-    link: '#',
-    image: '/video-edit.jpg' // <-- Tambahkan baris ini
+    link: 'https://www.tiktok.com/@podcastsantai/video/7361401233963289874',
+    image: '/video1.jpeg' // <-- Tambahkan baris ini
+  },
+  {
+    id: 5,
+    title: 'Podcast Santai - Story Highlight Clip',
+    description: 'Video podcast pendek dengan editing dinamis dan subtitle interaktif untuk meningkatkan engagement penonton di TikTok. Fokus pada pemotongan momen penting agar pesan tersampaikan secara singkat dan menarik.',
+    techStack: ['CapCut', 'Video Editing'],
+    category: 'Creative',
+    link: 'https://www.tiktok.com/@podcastsantai/video/7365472087311502598',
+    image: '/video2.jpeg' // <-- Tambahkan baris ini
+  },
+  {
+    id: 6,
+    title: 'Podcast Santai - Story Highlight Clip',
+    description: 'Video podcast pendek dengan editing dinamis dan subtitle interaktif untuk meningkatkan engagement penonton di TikTok. Fokus pada pemotongan momen penting agar pesan tersampaikan secara singkat dan menarik.',           
+    techStack: ['CapCut', 'Video Editing'],
+    category: 'Creative',
+    link: 'https://www.tiktok.com/@podcastsantai/video/7361964284886174981',
+    image: '/video3.jpeg' // <-- Tambahkan baris ini
   }
 ];

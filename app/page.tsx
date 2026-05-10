@@ -2,7 +2,8 @@
 
 import { motion, Variants } from "framer-motion"; // <-- Menambahkan import 'Variants'
 import { projects } from '../data/projects';
-import { FaGithub, FaLinkedin, FaInstagram, FaDiscord, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaInstagram, FaDiscord, FaEnvelope, FaAward, FaExternalLinkAlt } from "react-icons/fa";
+import { certificates } from "@/data/certificates";
 
 export default function Home() {
   const webProjects = projects.filter(p => p.category === 'Web Development');
@@ -63,7 +64,7 @@ export default function Home() {
           <div className="relative w-72 h-72 md:w-96 md:h-96 group">
             <div className="absolute inset-0 bg-linear-to-tr from-blue-600 to-indigo-400 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
             <div className="relative w-full h-full bg-white rounded-full overflow-hidden shadow-2xl border-4 border-white flex items-center justify-center text-slate-400">
-              <img src="/profile.jpeg" alt="Nadhif Hafiz Pradiptya" className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
+              <img src="/profile.jpeg" alt="Nadhif Hafiz Pradiptya" className="w-auto h-auto object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
             </div>
           </div>
         </motion.div>
@@ -170,7 +171,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. Hubungi Saya */}
+      {/* 7. Sertifikat & Pencapaian */}
+      <section id="certificates" className="py-24 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <motion.div 
+            className="mb-16 text-center"
+            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+          >
+            <h2 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">Sertifikasi</h2>
+            <p className="text-slate-500 text-lg">Validasi keahlian melalui kursus dan pelatihan profesional.</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {certificates.map((cert, idx) => (
+              <motion.a
+                key={cert.id}
+                href={cert.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300 flex flex-col justify-between"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div>
+                  <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <FaAward size={24} />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors">
+                    {cert.title}
+                  </h3>
+                  <p className="text-slate-500 text-sm font-medium mb-1">{cert.issuer}</p>
+                </div>
+                
+                <div className="mt-8 flex justify-between items-center border-t border-slate-100 pt-4">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{cert.date}</span>
+                  <div className="text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-xs font-bold">
+                    LIHAT <FaExternalLinkAlt size={10} />
+                  </div>
+                </div>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Hubungi Saya */}
       <section id="contact" className="bg-white py-24 border-t border-slate-200">
         <motion.div className="max-w-4xl mx-auto px-6 md:px-8 text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">Mari Berkolaborasi.</h2>

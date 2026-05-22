@@ -209,9 +209,9 @@ export default function Home() {
               </div>
               <div className="z-10 text-center sm:text-left flex-1">
                  <h3 className="font-semibold text-lg text-black dark:text-white tracking-tight">Universitas Singaperbangsa Karawang</h3>
-                 <p className="text-sm font-bold text-zinc-500 dark:text-zinc-400 mb-3 uppercase tracking-wider">S1 Teknik Informatika • Menuju Kelulusan</p>
+                 <p className="text-sm font-bold text-zinc-500 dark:text-zinc-400 mb-3 uppercase tracking-wider">S1 Informatika • Menuju Kelulusan</p>
                  <p className="text-sm text-zinc-600 dark:text-zinc-400 font-light leading-relaxed">
-                   Menyelesaikan tahap akhir studi sarjana dengan rekam jejak pengembangan perangkat lunak secara utuh—dari studi independen bersama <strong>Ruang Guru</strong>, hingga implementasi solusi IoT terapan. Berkomitmen menghadirkan karya akhir yang menyatukan logika komputasi visual.
+                   Menyelesaikan tahap akhir studi sarjana dengan rekam jejak pengembangan perangkat lunak secara utuh dari studi independen bersama <strong>Ruang Guru</strong>, hingga implementasi solusi IoT terapan. Berkomitmen menghadirkan karya akhir yang menyatukan logika komputasi visual.
                  </p>
               </div>
             </SpotlightCard>

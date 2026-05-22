@@ -1,10 +1,7 @@
 @import "tailwindcss";
 
-/* 1. Dark mode variant configuration - uncomment if using custom dark variant
-  NOTE: @custom-variant is not standard CSS and may trigger validator warnings.
-  If needed, move this to tailwind.config.js instead.
-*/
-/* @custom-variant dark (&:where(.dark, .dark *)); */
+/* 1. AKTIFKAN BARIS INI UNTUK MANUAL DARK MODE */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* 2. Variabel dasar (opsional tapi bagus untuk struktur) */
 :root {

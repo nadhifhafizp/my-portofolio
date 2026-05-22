@@ -1,19 +1,31 @@
 @import "tailwindcss";
 
+/* 1. Dark mode variant configuration - uncomment if using custom dark variant
+  NOTE: @custom-variant is not standard CSS and may trigger validator warnings.
+  If needed, move this to tailwind.config.js instead.
+*/
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+
+/* 2. Variabel dasar (opsional tapi bagus untuk struktur) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafafa; /* zinc-50 */
+  --foreground: #18181b; /* zinc-900 */
 }
 
-:root {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Warna saat dark mode aktif */
+.dark {
+  --background: #050505; /* Hitam pekat */
+  --foreground: #fafafa; /* Putih bersih */
 }
 
+/* 3. Terapkan warna ke body */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* 4. Efek transisi default yang halus untuk perpindahan tema */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

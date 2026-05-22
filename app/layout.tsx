@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-playfair' });
+const inter = Inter({ 
+  subsets: ["latin"], 
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: "Nadhif - Portfolio",
+  title: "Nadhif - Software & Visuals",
   description: "Full-stack Developer, IoT Enthusiast & Creative Visual Editor",
 };
 
@@ -16,9 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
-      {/* Warna dasar krem terang yang elegan */}
-      <body className={`${inter.variable} ${playfair.variable} font-sans bg-stone-50 text-stone-800 antialiased`}>
+    <html lang="id" className="scroll-smooth">
+      <body className={`${inter.variable} font-sans bg-black text-zinc-50 antialiased selection:bg-zinc-800 selection:text-white`}>
         {children}
       </body>
     </html>

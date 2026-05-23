@@ -6,6 +6,41 @@ import { certificates } from '../data/certificates';
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope, FaExternalLinkAlt, FaTimes, FaSun, FaMoon, FaCode, FaVideo } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 
+// --- TACTILE FEEDBACK UTILITY ---
+// Creates a premium "haptic" feel via subtle vibration and a synthesized micro-click sound.
+const handleTactileFeedback = () => {
+  // 1. Hardware Haptic Feedback (Supported Mobile Devices)
+  if (typeof window !== "undefined" && window.navigator && window.navigator.vibrate) {
+    window.navigator.vibrate(10); // Very subtle 10ms vibration
+  }
+  
+  // 2. Subtle Audio "Tick" (Premium Desktop UI feel)
+  try {
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    // Quick frequency drop for a "pop" / "tick" sound
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(800, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.03);
+    
+    // Very low volume, quick fade
+    gainNode.gain.setValueAtTime(0.10, ctx.currentTime); 
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+    
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.03);
+  } catch (e) {
+    // Silently ignore if AudioContext is not supported or blocked
+  }
+};
+
 export default function Home() {
   // --- STATE ---
   const [isDark, setIsDark] = useState(true);
@@ -95,9 +130,15 @@ export default function Home() {
             <a href="#projects" className="hover:text-black dark:hover:text-white transition-colors">Proyek</a>
             <a href="#contact" className="hover:text-black dark:hover:text-white transition-colors">Kontak</a>
           </div>
-          <button onClick={() => setIsDark(!isDark)} className="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900 hover:scale-110 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all border border-zinc-200 dark:border-zinc-800">
+          <motion.button 
+            onClick={() => { handleTactileFeedback(); setIsDark(!isDark); }} 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900 transition-colors border border-zinc-200 dark:border-zinc-800"
+          >
             {isDark ? <FaSun size={14} className="text-zinc-300" /> : <FaMoon size={14} className="text-zinc-700" />}
-          </button>
+          </motion.button>
         </div>
       </motion.nav>
 
@@ -299,8 +340,8 @@ export default function Home() {
                   className={`flex flex-col gap-8 md:gap-16 items-center ${idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'}`}
                 >
                   {/* Image Side */}
-                  <div className="w-full md:w-1/2 cursor-pointer" onClick={() => setSelectedProject(project)}>
-                    <SpotlightCard className="p-0 aspect-video md:aspect-4/3 group relative border-zinc-200 dark:border-white/5">
+                  <div className="w-full md:w-1/2 cursor-pointer">
+                    <SpotlightCard onClick={() => setSelectedProject(project)} className="p-0 aspect-video md:aspect-4/3 group relative border-zinc-200 dark:border-white/5 cursor-pointer">
                       <img src={project.image} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out z-10 relative" />
                       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
                         <span className="px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-xs font-bold tracking-wide shadow-xl border border-white/20">
@@ -327,9 +368,18 @@ export default function Home() {
                     </div>
 
                     <div>
-                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 h-11 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wider rounded-full hover:scale-105 transition-transform shadow-lg">
+                      <motion.a 
+                        href={project.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        onClick={handleTactileFeedback}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        className="inline-flex items-center gap-2 px-6 h-11 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wider rounded-full shadow-lg"
+                      >
                         Visit Web <FaExternalLinkAlt size={10} />
-                      </a>
+                      </motion.a>
                     </div>
                   </div>
                 </motion.div>
@@ -353,8 +403,8 @@ export default function Home() {
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.5 }}
                 >
-                  <SpotlightCard className="flex flex-col h-full group" onClick={() => setSelectedProject(project)}>
-                    <div className="w-full aspect-9/16 relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-white/5 cursor-pointer">
+                  <SpotlightCard className="flex flex-col h-full group cursor-pointer" onClick={() => setSelectedProject(project)}>
+                    <div className="w-full aspect-9/16 relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-white/5">
                        <img src={project.image} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
                        
                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
@@ -369,7 +419,7 @@ export default function Home() {
                       <div>
                         <div className="flex items-center justify-between mb-2">
                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{project.category}</span>
-                           <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors" onClick={(e) => e.stopPropagation()}>
+                           <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors" onClick={(e) => { e.stopPropagation(); handleTactileFeedback(); }}>
                               <FaExternalLinkAlt size={12} />
                            </a>
                         </div>
@@ -436,12 +486,15 @@ export default function Home() {
               className="bg-white dark:bg-[#0a0a0a] w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-zinc-200 dark:border-white/10 shadow-2xl relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <button 
-                onClick={() => setSelectedProject(null)}
-                className="absolute top-5 right-5 w-10 h-10 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-full flex items-center justify-center text-black dark:text-white hover:scale-110 transition-transform z-20 shadow-sm"
+              <motion.button 
+                onClick={() => { handleTactileFeedback(); setSelectedProject(null); }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className="absolute top-5 right-5 w-10 h-10 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-full flex items-center justify-center text-black dark:text-white z-20 shadow-sm"
               >
                 <FaTimes size={14} />
-              </button>
+              </motion.button>
 
               <div className="w-full h-64 md:h-80 relative bg-zinc-100 dark:bg-zinc-900">
                 <img 
@@ -473,9 +526,18 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <a href={selectedProject.link} target="_blank" rel="noopener noreferrer" className="w-full py-4 mt-4 flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black rounded-xl text-sm font-bold uppercase tracking-widest transition-transform hover:scale-[1.02] shadow-lg">
+                  <motion.a 
+                    href={selectedProject.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={handleTactileFeedback}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className="w-full py-4 mt-4 flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black rounded-xl text-sm font-bold uppercase tracking-widest shadow-lg"
+                  >
                     Lihat Proyek Langsung <FaExternalLinkAlt size={12} />
-                  </a>
+                  </motion.a>
                 </div>
               </div>
             </motion.div>
@@ -488,44 +550,160 @@ export default function Home() {
 
 // --- SUB COMPONENTS ---
 
-// Komponen Global Companion
+// --- SISTEM 2 KARAKTER (COWOK & CEWEK) ---
+
+// 1. Komponen Global Companion (Parent pembungkus)
 function InteractiveCompanion() {
-  const x = useMotionValue(0);
-  const direction = useRef(1);
-  const isFleeing = useRef(false);
+  return (
+    <div className="fixed bottom-0 left-0 w-full z-50 pointer-events-none overflow-hidden h-[150px]">
+      {/* Karakter Cowok (Mulai dari kiri) */}
+      <SingleCharacter gender="boy" startX={-150} initialDir={1} />
+      
+      {/* Karakter Cewek (Mulai dari kanan luar) */}
+      <SingleCharacter gender="girl" startX={2500} initialDir={-1} />
+    </div>
+  );
+}
+
+// 2. Sub-Komponen Karakter Tunggal
+function SingleCharacter({ gender, startX, initialDir }: { gender: 'boy' | 'girl', startX: number, initialDir: number }) {
+  const x = useMotionValue(startX);
+  const direction = useRef(initialDir);
   const mouseX = useRef(0);
   const mouseY = useRef(0);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(initialDir === -1);
+  
+  // States Animasi & Perilaku
   const [fleeingState, setFleeingState] = useState(false);
+  const [isSurrenderedState, setIsSurrenderedState] = useState(false);
+  const [isIdleStoppedState, setIsIdleStoppedState] = useState(false);
+  const [isInteractingState, setIsInteractingState] = useState(false);
 
+  // States Bubble Chat
+  const [showBubble, setShowBubble] = useState(false);
+  const [bubbleText, setBubbleText] = useState("");
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Logika Internal
+  const isFleeing = useRef(false);
+  const isSurrendered = useRef(false);
+  const isIdleStopped = useRef(false);
+  const isInteracting = useRef(false);
+  const fleeStartX = useRef<number | null>(null);
+  const hasSaidSurrender = useRef(false);
+
+  // --- KONFIGURASI KARAKTER ---
+  const config = gender === 'boy' ? {
+    greetings: ["Halo bro! 👋", "Lagi sibuk ya?", "Selamat datang! 👊", "Mantap webnya!"],
+    clickPhrases: ["Yoo! Ada apa?", "Sip! 👍", "Hehe, geli bang!"],
+    surrenderPhrases: ["Ampun bang! 🏳️", "Mentok bro...", "Waduh, nyerah deh 😵"],
+    colorBody: "bg-zinc-800 dark:bg-zinc-200",
+    colorText: "text-white dark:text-black",
+    bow: false,
+    speedBase: 1.3,
+    speedFlee: 3.5
+  } : {
+    greetings: ["Haiii kak~ 👋", "Selamat datang! ✨", "Bagus ya portofolionya? 🌸", "Hihihi 🤭"],
+    clickPhrases: ["Kyaa! Geli~ 🤭", "Ada yang bisa dibantu kak? 🎀", "Yey! (^.^)"],
+    surrenderPhrases: ["Huft, capek lari... 🏳️", "Jangan dikejar dong kak~ 🥺", "Mentok nih... 🧱"],
+    colorBody: "bg-rose-400 dark:bg-rose-300",
+    colorText: "text-white dark:text-zinc-900",
+    bow: true,
+    speedBase: 1.0,
+    speedFlee: 2.8
+  };
+
+  const triggerBubble = (text: string, duration = 3000) => {
+    setBubbleText(text);
+    setShowBubble(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setShowBubble(false), duration);
+  };
+
+  // Lacak Kursor
   useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent) => {
       mouseX.current = e.clientX;
       mouseY.current = e.clientY;
     };
-    window.addEventListener("mousemove", handleGlobalMouseMove);
-    return () => window.removeEventListener("mousemove", handleGlobalMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  // Idle Chat & Berhenti (Offset delay supaya cowok & cewek nggak ngomong barengan)
+  useEffect(() => {
+    const startDelay = gender === 'girl' ? 3000 : 0; 
+    
+    const initTimeout = setTimeout(() => {
+      const patrolInterval = setInterval(() => {
+        if (!isFleeing.current && !isInteracting.current && !isSurrendered.current && !isIdleStopped.current) {
+          isIdleStopped.current = true;
+          setIsIdleStoppedState(true);
+          
+          const randomGreeting = config.greetings[Math.floor(Math.random() * config.greetings.length)];
+          triggerBubble(randomGreeting, 3000);
+
+          setTimeout(() => {
+            if (isIdleStopped.current && !isInteracting.current && !isFleeing.current) {
+              isIdleStopped.current = false;
+              setIsIdleStoppedState(false);
+            }
+          }, 3500);
+        }
+      }, 9000); // Tiap 9 detik nyapa
+      return () => clearInterval(patrolInterval);
+    }, startDelay);
+
+    return () => clearTimeout(initTimeout);
+  }, [gender]); // eslint-disable-line
+
+  // Fisika Animasi Frame-by-Frame
   useAnimationFrame(() => {
+    if (isInteracting.current || isIdleStopped.current) return;
+
     const currentX = x.get();
     const charY = window.innerHeight - 40; 
     const dist = Math.hypot(mouseX.current - currentX, mouseY.current - charY);
 
-    if (dist < 250) {
+    if (dist < 120) { // Kursor dekat
       if (!isFleeing.current) {
          isFleeing.current = true;
          setFleeingState(true);
+         fleeStartX.current = currentX;
+         isSurrendered.current = false;
+         hasSaidSurrender.current = false;
       }
       direction.current = mouseX.current < currentX ? 1 : -1;
-    } else {
-      if (isFleeing.current) {
+
+      // Nyerah kalau dikejar terus (jarak 70px)
+      if (fleeStartX.current !== null && !isSurrendered.current) {
+         const fleeDistance = Math.abs(currentX - fleeStartX.current);
+         if (fleeDistance > 70) {
+             isSurrendered.current = true;
+             setFleeingState(false);
+             setIsSurrenderedState(true);
+
+             if (!hasSaidSurrender.current) {
+                hasSaidSurrender.current = true;
+                const randomSurrender = config.surrenderPhrases[Math.floor(Math.random() * config.surrenderPhrases.length)];
+                triggerBubble(randomSurrender, 4000);
+             }
+         }
+      }
+    } else { // Kursor jauh
+      if (isFleeing.current || isSurrendered.current) {
          isFleeing.current = false;
          setFleeingState(false);
+         fleeStartX.current = null;
+         isSurrendered.current = false;
+         setIsSurrenderedState(false);
+         hasSaidSurrender.current = false;
       }
     }
 
-    const speed = isFleeing.current ? 14 : 1.5;
+    let speed = config.speedBase; 
+    if (isFleeing.current) speed = isSurrendered.current ? 0 : config.speedFlee; 
+
     let nextX = currentX + speed * direction.current;
 
     if (nextX > window.innerWidth - 80) { 
@@ -542,24 +720,168 @@ function InteractiveCompanion() {
     if (direction.current === -1 && isFlipped) setIsFlipped(false);
   });
 
+  // Saat di-Klik
+  const handleCharacterClick = () => {
+    if (typeof window !== "undefined" && (window as any).handleTactileFeedback) {
+      (window as any).handleTactileFeedback();
+    } else if (typeof window !== "undefined" && window.navigator && window.navigator.vibrate) {
+      window.navigator.vibrate(10);
+    }
+
+    isInteracting.current = true;
+    setIsInteractingState(true);
+    setFleeingState(false);
+    isIdleStopped.current = false;
+    setIsIdleStoppedState(false);
+    isSurrendered.current = false;
+    setIsSurrenderedState(false);
+
+    const randomPhrase = config.clickPhrases[Math.floor(Math.random() * config.clickPhrases.length)];
+    triggerBubble(randomPhrase, 3000);
+
+    setTimeout(() => {
+      isInteracting.current = false;
+      setIsInteractingState(false);
+    }, 3000);
+  };
+
+  // --- KOMPONEN WAJAH DINAMIS ---
+  const FaceBoy = () => {
+    if (isSurrenderedState) return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <line x1="12" y1="18" x2="16" y2="18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <line x1="24" y1="18" x2="28" y2="18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <circle cx="20" cy="24" r="2" fill="currentColor" />
+         <text x="25" y="10" fontSize="8" fill="currentColor" fontWeight="bold">Z</text>
+         <text x="32" y="5" fontSize="5" fill="currentColor" fontWeight="bold">z</text>
+      </svg>
+    );
+    if (fleeingState) return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <path d="M 16 16 L 12 18 L 16 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+         <path d="M 24 16 L 28 18 L 24 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+         <path d="M 16 25 L 18 23 L 20 25 L 22 23 L 24 25" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    );
+    if (isInteractingState || isIdleStoppedState) return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <path d="M 12 18 Q 14 15 16 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <path d="M 24 18 Q 26 15 28 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <path d="M 16 23 Q 20 28 24 23" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      </svg>
+    );
+    return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <circle cx="14" cy="18" r="2.5" fill="currentColor" />
+         <circle cx="26" cy="18" r="2.5" fill="currentColor" />
+         <path d="M 18 24 Q 20 26 22 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    );
+  };
+
+  const FaceGirl = () => {
+    // Helper untuk pipi merona (Blush)
+    const Blush = () => (
+      <>
+        <ellipse cx="10" cy="21" rx="2.5" ry="1.5" fill="#f43f5e" opacity="0.6"/>
+        <ellipse cx="30" cy="21" rx="2.5" ry="1.5" fill="#f43f5e" opacity="0.6"/>
+      </>
+    );
+
+    if (isSurrenderedState) return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <path d="M 12 18 Q 14 20 16 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <path d="M 24 18 Q 26 20 28 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <Blush />
+         <line x1="18" y1="24" x2="22" y2="24" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    );
+    if (fleeingState) return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <path d="M 16 16 L 12 18 L 16 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+         <path d="M 24 16 L 28 18 L 24 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+         <Blush />
+         <circle cx="20" cy="24" r="2.5" fill="currentColor" />
+      </svg>
+    );
+    if (isInteractingState || isIdleStoppedState) return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <path d="M 12 18 Q 14 15 16 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <path d="M 24 18 Q 26 15 28 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+         <Blush />
+         <path d="M 18 23 Q 20 26 22 23" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    );
+    return (
+      <svg viewBox="0 0 40 40" className="w-full h-full transition-all">
+         <circle cx="14" cy="18" r="2.5" fill="currentColor" />
+         <circle cx="26" cy="18" r="2.5" fill="currentColor" />
+         <Blush />
+         <circle cx="20" cy="23" r="1.5" fill="currentColor" />
+      </svg>
+    );
+  };
+
+  const isMoving = !isSurrenderedState && !isIdleStoppedState && !isInteractingState;
+  const bounceDuration = fleeingState ? 0.25 : 0.6;
+
   return (
-    <div className="fixed bottom-0 left-0 w-full z-50 pointer-events-none">
-        <motion.div 
-          style={{ x }} 
-          className="absolute bottom-2 w-14 h-14 text-black dark:text-white drop-shadow-2xl"
-          animate={{ 
-            scaleX: isFlipped ? -1 : 1, 
-            y: fleeingState ? [0, -16, 0] : [0, -4, 0] 
-          }}
-          transition={{ 
-            y: { repeat: Infinity, duration: fleeingState ? 0.2 : 0.8, ease: "easeInOut" } 
-          }}
-        >
-          <svg className="w-full h-full fill-current" viewBox="0 0 24 24">
-            <path d="M20 12h-2v-1c0-1.7-1.3-3-3-3h-2c-.5 0-1-.2-1.4-.6L10.3 6.1C9.7 5.4 8.9 5 8 5H4c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2h1v4c0 .6.4 1 1 1s1-.4 1-1v-4h4v4c0 .6.4 1 1 1s1-.4 1-1v-4h3c1.1 0 2-.9 2-2v-1h2c.6 0 1-.4 1-1s-.4-1-1-1zm-12-3c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1z"/>
+    <motion.div 
+      style={{ x }} 
+      className="absolute bottom-4 w-14 h-14 pointer-events-auto cursor-pointer"
+      animate={{ scaleX: isFlipped ? -1 : 1 }}
+      onClick={handleCharacterClick}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      {/* --- CHAT BUBBLE --- */}
+      <AnimatePresence>
+        {showBubble && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 5, scale: 0.8 }}
+            style={{ scaleX: isFlipped ? -1 : 1 }} 
+            className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 w-max max-w-[220px] bg-white dark:bg-zinc-800 text-black dark:text-white text-[11px] font-bold px-4 py-2.5 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-700 pointer-events-none"
+          >
+            {bubbleText}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-[6px] border-transparent border-t-white dark:border-t-zinc-800" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- FISIK KARAKTER --- */}
+      <motion.div
+        animate={{ y: isMoving ? [0, -6, 0] : 0 }} 
+        transition={{ repeat: Infinity, duration: bounceDuration, ease: "easeInOut" }}
+        className="relative w-full h-full"
+      >
+        {/* Pita untuk Cewek */}
+        {config.bow && (
+          <svg viewBox="0 0 24 24" className="absolute -top-3 right-0 w-8 h-8 text-rose-500 z-20 drop-shadow-sm">
+            <path fill="currentColor" d="M12 12c-1.5-1-4-3-4-5s1.5-3 3-3 2 1.5 3 2.5c1-1 1.5-2.5 3-2.5s3 1 3 3-2.5 4-4 5c1.5 1 4 3 4 5s-1.5 3-3 3-2-1.5-3-2.5c-1 1-1.5 2.5-3 2.5s-3-1-3-3 2.5-4 4-5z"/>
           </svg>
-        </motion.div>
-    </div>
+        )}
+
+        {/* Badan Karakter */}
+        <div className={`w-12 h-12 rounded-[22px] shadow-xl flex items-center justify-center relative z-10 mx-auto transition-colors duration-500 ${config.colorBody} ${config.colorText}`}>
+           {gender === 'boy' ? <FaceBoy /> : <FaceGirl />}
+        </div>
+
+        {/* Kaki Kiri */}
+        <motion.div
+           animate={{ y: isMoving ? [0, -4, 0] : 0 }}
+           transition={{ repeat: Infinity, duration: bounceDuration, ease: "easeInOut", delay: 0.1 }}
+           className={`absolute -bottom-1.5 left-3 w-2.5 h-4 rounded-full z-0 ${config.colorBody}`}
+        />
+        {/* Kaki Kanan */}
+        <motion.div
+           animate={{ y: isMoving ? [0, -4, 0] : 0 }}
+           transition={{ repeat: Infinity, duration: bounceDuration, ease: "easeInOut", delay: 0.25 }}
+           className={`absolute -bottom-1.5 right-3 w-2.5 h-4 rounded-full z-0 ${config.colorBody}`}
+        />
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -596,7 +918,7 @@ function TechMarquee() {
   );
 }
 
-// SpotlightCard
+// SpotlightCard (Upgraded for Tactile Feedback on Click)
 function SpotlightCard({ children, className = "", onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) {
   const divRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -616,10 +938,17 @@ function SpotlightCard({ children, className = "", onClick }: { children: React.
         show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } }
       }}
       ref={divRef}
-      onClick={onClick}
+      onClick={(e) => {
+        if (onClick) {
+          handleTactileFeedback();
+          onClick();
+        }
+      }}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
+      whileTap={onClick ? { scale: 0.97 } : undefined}
+      transition={{ type: "spring", stiffness: 500, damping: 30 }}
       className={`relative overflow-hidden rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#0a0a0a] shadow-sm transition-colors hover:border-zinc-300 dark:hover:border-zinc-800 ${className}`}
     >
       <div
@@ -654,9 +983,13 @@ function MagneticLink({ children, href, title }: { children: React.ReactNode, hr
   return (
     <motion.a
       ref={ref} href={href} target="_blank" rel="noopener noreferrer" title={title}
-      onMouseMove={handleMouse} onMouseLeave={reset} animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-      className="w-12 h-12 rounded-full bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all z-10 shadow-sm"
+      onMouseMove={handleMouse} onMouseLeave={reset} 
+      onClick={handleTactileFeedback}
+      animate={{ x: position.x, y: position.y }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
+      className="w-12 h-12 rounded-full bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black z-10 shadow-sm"
     >
       {children}
     </motion.a>

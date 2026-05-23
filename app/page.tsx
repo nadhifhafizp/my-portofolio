@@ -3,8 +3,9 @@
 import { motion, useScroll, useTransform, useSpring, AnimatePresence, Variants, useMotionValue, useAnimationFrame } from "framer-motion";
 import { projects } from '../data/projects';
 import { certificates } from '../data/certificates';
-import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope, FaExternalLinkAlt, FaTimes, FaSun, FaMoon, FaCode, FaVideo } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope, FaExternalLinkAlt, FaTimes, FaSun, FaMoon, FaCode, FaVideo, FaBars } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
+
 
 // --- TACTILE FEEDBACK UTILITY ---
 // Creates a premium "haptic" feel via subtle vibration and a synthesized micro-click sound.
@@ -45,6 +46,7 @@ export default function Home() {
   // --- STATE ---
   const [isDark, setIsDark] = useState(true);
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // --- FILTER PROJECTS ---
   const webProjects = projects.filter(p => p.category === 'Web Development');
@@ -122,23 +124,72 @@ export default function Home() {
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
         className="fixed w-full top-6 z-50 flex justify-center px-4"
       >
-        <div className="flex items-center gap-6 px-6 py-3 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-full shadow-lg">
+        <div className="relative flex items-center gap-4 md:gap-6 px-5 py-3 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-full shadow-lg">
+          
           <span className="font-bold text-lg tracking-tight text-black dark:text-white">nadhif<span className="text-zinc-400 dark:text-zinc-600">.</span></span>
+          
+          {/* DESKTOP MENU (Hanya tampil di layar besar) */}
           <div className="hidden md:flex space-x-6 text-sm font-medium text-zinc-500 dark:text-zinc-400">
              <a href="#home" className="hover:text-black dark:hover:text-white transition-colors">Home</a>
             <a href="#about" className="hover:text-black dark:hover:text-white transition-colors">Tentang</a>
             <a href="#projects" className="hover:text-black dark:hover:text-white transition-colors">Proyek</a>
             <a href="#contact" className="hover:text-black dark:hover:text-white transition-colors">Kontak</a>
           </div>
-          <motion.button 
-            onClick={() => { handleTactileFeedback(); setIsDark(!isDark); }} 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900 transition-colors border border-zinc-200 dark:border-zinc-800"
-          >
-            {isDark ? <FaSun size={14} className="text-zinc-300" /> : <FaMoon size={14} className="text-zinc-700" />}
-          </motion.button>
+
+          {/* GROUP TOMBOL KANAN */}
+          <div className="flex items-center gap-2">
+            {/* THEME TOGGLE */}
+            <motion.button 
+              onClick={() => { handleTactileFeedback(); setIsDark(!isDark); }} 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900 transition-colors border border-zinc-200 dark:border-zinc-800"
+            >
+              {isDark ? <FaSun size={14} className="text-zinc-300" /> : <FaMoon size={14} className="text-zinc-700" />}
+            </motion.button>
+
+            {/* MOBILE MENU BUTTON (Hanya tampil di HP) */}
+            <motion.button 
+              onClick={() => { handleTactileFeedback(); setIsMobileMenuOpen(!isMobileMenuOpen); }} 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900 transition-colors border border-zinc-200 dark:border-zinc-800 text-black dark:text-white"
+            >
+              {isMobileMenuOpen ? <FaTimes size={14} /> : <FaBars size={14} />}
+            </motion.button>
+          </div>
+
+          {/* MOBILE MENU DROPDOWN */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="absolute top-full mt-3 right-0 w-48 p-4 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl flex flex-col gap-4 md:hidden"
+              >
+                {[
+                  { name: 'Home', href: '#home' },
+                  { name: 'Tentang', href: '#about' },
+                  { name: 'Proyek', href: '#projects' },
+                  { name: 'Kontak', href: '#contact' },
+                ].map((item) => (
+                  <a 
+                    key={item.name}
+                    href={item.href} 
+                    onClick={() => { handleTactileFeedback(); setIsMobileMenuOpen(false); }}
+                    className="text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors px-2 py-1 border-b border-zinc-100 dark:border-zinc-800/50 last:border-0"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
         </div>
       </motion.nav>
 

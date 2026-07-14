@@ -5,6 +5,9 @@ import { projects } from '../data/projects';
 import { certificates } from '../data/certificates';
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope, FaExternalLinkAlt, FaTimes, FaSun, FaMoon, FaCode, FaVideo, FaBars } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
+import AetherFlowBackground from "../components/AetherFlow";
+import { BackgroundPixelStars } from "@/components/PixelStars";
+
 
 
 // --- TACTILE FEEDBACK UTILITY ---
@@ -194,12 +197,15 @@ export default function Home() {
       </motion.nav>
 
       {/* --- 1. HERO SECTION --- */}
-      <section ref={heroRef} id="home" className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-        {/* Parallax Background Layer */}
-        <motion.div 
-          style={{ y: bgParallaxY, opacity: heroOpacity }}
-          className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20 -z-10 flex items-center justify-center"
-        >
+     <section ref={heroRef} id="home" className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+      {/* Aether Flow Network Background — BARU */}
+      <AetherFlowBackground isDark={isDark} className="opacity-70 dark:opacity-100" />
+
+      {/* Parallax Background Layer (tidak diubah) */}
+      <motion.div 
+        style={{ y: bgParallaxY, opacity: heroOpacity }}
+        className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20 -z-10 flex items-center justify-center"
+      >
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-zinc-200/20 to-transparent dark:via-zinc-900/10" />
           <div className="w-150 md:w-200 h-100 bg-zinc-300/20 dark:bg-zinc-900/30 blur-[120px] rounded-full" />
         </motion.div>
@@ -254,12 +260,17 @@ export default function Home() {
           </motion.div>
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full z-20">
+         <div className="absolute bottom-0 left-0 w-full z-20">
           <TechMarquee />
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-6 pb-24 space-y-32">
+     <div className="relative overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-500">
+        <BackgroundPixelStars />
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pb-24 space-y-32">
         
         {/* --- 2. BENTO GRID: ABOUT, PHILOSOPHY & CERTIFICATIONS --- */}
         <motion.section id="about" className="scroll-mt-32 pt-20 md:pt-32" initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={STAGGER}>
@@ -518,7 +529,7 @@ export default function Home() {
             <p className="mt-2 md:mt-0 flex items-center gap-1">Designed in Karawang <span className="text-black dark:text-white">❤</span></p>
           </div>
         </motion.section>
-
+          </div>
       </div>
 
       {/* --- POP-UP MODAL STUDI KASUS --- */}
